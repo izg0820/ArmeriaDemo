@@ -1,6 +1,7 @@
 package example.armeria.server.blog;
 
 import com.linecorp.armeria.common.HttpResponse;
+import com.linecorp.armeria.common.HttpStatus;
 import com.linecorp.armeria.server.annotation.*;
 
 
@@ -20,7 +21,7 @@ public final class BlogService {
         return HttpResponse.ofJson(blogPost);
     }
 
-    @Get("/blogs:id") //query parameter or path variable를 사용하기 위해서 :id와 같이 추가한다.
+    @Get("/blogs/:id") //query parameter or path variable를 사용하기 위해서 :id와 같이 추가한다.
     public HttpResponse getBlogPost(@Param int id) {
         BlogPost blogPost = blogPosts.get(id);
         return HttpResponse.ofJson(blogPost);
@@ -37,4 +38,19 @@ public final class BlogService {
         }
         return blogPosts.values().stream().collect(Collectors.toList());
     }
+
+    @Put("/blogs/:id")
+    public HttpResponse updateBlogPost(@Param int id, @RequestObject BlogPost blogPost) {
+        final BlogPost oldBlogPost = blogPosts.get(id);
+        if (oldBlogPost == null) {
+            HttpResponse.of(HttpStatus.NOT_FOUND);
+        }
+        BlogPost newBlogPost = new BlogPost(id, blogPost.getTitle(),
+                blogPost.getContent(),
+                oldBlogPost.getCreatedAt(),
+                blogPost.getCreatedAt());
+        blogPosts.put(id, newBlogPost);
+        return HttpResponse.ofJson(newBlogPost);
+    }
+
 }
