@@ -30,7 +30,7 @@ public final class BlogService {
     @Get("/blogs")
     @ProducesJson //Convert list of object to Json
     public Iterable<BlogPost> getBlogPosts(@Param @Default("true") boolean descending) {
-        if(descending) {
+        if (descending) {
             return blogPosts.entrySet()
                     .stream()
                     .sorted(Collections.reverseOrder(Comparator.comparingInt(Map.Entry::getKey)))
@@ -53,4 +53,14 @@ public final class BlogService {
         return HttpResponse.ofJson(newBlogPost);
     }
 
+    @Blocking
+    @Delete("/blogs/:id")
+    @ExceptionHandler(BadRequestExceptionHandler.class)
+    public HttpResponse deleteBlogPost(@Param int id) {
+        final BlogPost removed = blogPosts.remove(id);
+        if (removed == null) {
+            throw new IllegalArgumentException("The blog post does not exist. id: " + id);
+        }
+        return HttpResponse.of(HttpStatus.NO_CONTENT);
+    }
 }
