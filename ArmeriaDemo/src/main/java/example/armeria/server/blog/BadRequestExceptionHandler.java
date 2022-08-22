@@ -12,6 +12,7 @@ import com.linecorp.armeria.server.annotation.ExceptionHandlerFunction;
 public class BadRequestExceptionHandler implements ExceptionHandlerFunction {
     private static final ObjectMapper mapper = new ObjectMapper();
 
+    //Custom Exception을 위한 클래스도 제공을 한다
     @Override
     public HttpResponse handleException(ServiceRequestContext ctx, HttpRequest req, Throwable cause) {
         if (cause instanceof IllegalArgumentException) {

@@ -24,14 +24,14 @@ public class Main {
 
     static Server newServer(int port) {
         final ServerBuilder sb = Server.builder();
-        DocService docService = DocService.builder()
+        DocService docService = DocService.builder() //Swagger와 비슷한 느낌의 문서화 a클래스(?)
                 .exampleRequests(BlogService.class,
                         "CreateBlogPost",
                         "{\"title\":\"My first blog\", \"content\":\"Hello Armeria!\"}")
                 .build();
         return sb.http(port)
                 .annotatedService(new BlogService())
-                .serviceUnder("/docs",docService)
+                .serviceUnder("/docs", docService)
                 .build();
     }
 }
