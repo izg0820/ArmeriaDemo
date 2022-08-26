@@ -13,7 +13,7 @@ public class Main {
 
     public static void main(String[] args) {
         Server server = newServer(8080);
-
+        //포트를 다르게 하면 여러대도 가능한가??
         server.closeOnJvmShutdown();
 
         server.start().join();
